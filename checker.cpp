@@ -1,104 +1,67 @@
 #include <assert.h>
 #include <iostream>
-using namespace std;
-
-#define TEMP_MAX 45
-#define TEMP_MIN 0
-
-#define SOC_MAX 80
-#define SOC_MIN 20
-
-#define RATE_MAX 0.8f
-
-#define TEMP_FUNC "Temperature"
-#define SOC_FUNC "Soc"
-
-bool isValueInrage(string req, float value, float min, float max)
-{
-    bool retVal = false;
-
-    if(value < min)
-    {
-        cout <<req<< " value less than range!\n";
-        retVal = false;
-    }
-    else if(value > max)
-    {
-        cout <<req<< " value more than range!\n";
-        retVal = false;
-    }
-    else
-    {
-        cout <<req<< " value in range!\n";
-        retVal = true;
-    }
-
-    return retVal;
-}
-
-bool isChargeRateOk(float chargeRate)
-{
-    if(chargeRate > RATE_MAX) {
-        cout << "Charge Rate out of range!\n";
-        return false;
-      }
-
-    cout << "Charge Rate in range!\n";
-    return true;
-}
-
-bool batteryIsOk(float temperature, float soc, float chargeRate)
-{
-    bool tempcheck = isValueInrage(TEMP_FUNC, temperature, TEMP_MIN, TEMP_MAX);
-    bool soccheck = isValueInrage(SOC_FUNC, soc, SOC_MIN, SOC_MAX);
-    bool ratecheck = isChargeRateOk(chargeRate);
-
-    if(tempcheck == true && soccheck == true && ratecheck == true)
-    {
-        cout << "*Battery is OK*\n";
-        return true;
-    }
-    else
-    {
-        cout << "-Battery NOT OK-\n";
-        return false;
-    }
-}
-
+#include <string>
+#include "bmscheck.h"
 
 int main() {
 
+    BMSCheck bmsCheck;
+    bmsCheck.setTemperatureRange(TEMP_MAX, TEMP_MIN);
+    bmsCheck.setSocRange(SOC_MAX, SOC_MIN);
+    bmsCheck.setChargerateMax(RATE_MAX);
+
     //battery<0 , soc true, rate true,
-      assert(batteryIsOk(-1, 70, 0.7f) == false);
+    bmsCheck.checkBatteryParam(-1, 70, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == false);
 
     //battery>45, soc true, rate true,
-      assert(batteryIsOk(50, 85, 0) == false);
+    bmsCheck.checkBatteryParam(50, 85, 0);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == false);
 
     //battery between 0 & 45, soc true, chargeRate true,
-      assert(batteryIsOk(25, 70, 0.7f) == true);
+    bmsCheck.checkBatteryParam(25, 70, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 
     //battery true , soc < 20, rate true,
-      assert(batteryIsOk(25, 10, 0.7f) == false);
+    bmsCheck.checkBatteryParam(25, 10, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == false);
 
     //battery true , soc > 80, rate true,
-      assert(batteryIsOk(25, 90, 0.7f) == false);
+    bmsCheck.checkBatteryParam(25, 90, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == false);
 
     //battery true, soc true, chargeRate > 0.8 -
-      assert(batteryIsOk(25, 70, 0.9f) == false);
+    bmsCheck.checkBatteryParam(25, 70, 0.9f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == false);
 
     //battery upper limit , soc between 20 & 80, chargeRate true,
-      assert(batteryIsOk(45, 70, 0.7f) == true);
+    bmsCheck.checkBatteryParam(45, 70, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 
     //battery lower limit , soc between 20 & 80, chargeRate true,
-      assert(batteryIsOk(0, 70, 0.7f) == true);
+    bmsCheck.checkBatteryParam(0, 70, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 
     //battery true, soc upper limit, chargeRate true
-       assert(batteryIsOk(25, 80, 0.7f) == true);
+    bmsCheck.checkBatteryParam(25, 80, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 
    //battery true, soc lower limit, chargeRate true
-      assert(batteryIsOk(25, 20, 0.7f) == true);
+    bmsCheck.checkBatteryParam(25, 20, 0.7f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 
   //battery true, soc true, chargeRate uper limit
-     assert(batteryIsOk(25, 70, 0.8f) == true);
-
+    bmsCheck.checkBatteryParam(25, 70, 0.8f);
+    bmsCheck.getMsg();
+    assert(bmsCheck.isbatteryOk() == true);
 }
