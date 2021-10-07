@@ -19,41 +19,32 @@ void BMSCheck::setChargerateMax(float rMax)
 
 bool BMSCheck::isValueInrange(string req, float value, float min, float max)
 {
-    bool retVal = false;
-
     if(value < min){
         statusMsg+= req + " value less than range!";
-        retVal = false;
         batteryStatus = false;
+        return false;
     }else if(value > max){
         statusMsg+= req +  " value more than range!";
-        retVal = false;
         batteryStatus = false;
-    }else{
-        statusMsg+= req + " value in range!";
-        retVal = true;
-        batteryStatus = true;
+        return false;
     }
+    statusMsg+= req + " value in range!";
+    batteryStatus = true;
 
-    return retVal;
+    return true;
 }
 
 bool BMSCheck::isValueInrange(string req, float value, float max)
 {
-    bool retVal = true;
-
     if(value > max) {
         statusMsg+= req + " value more than range!";
-        retVal = false;
         batteryStatus = false;
+        return false;
       }
-    else{
-        statusMsg+= req + " value in range!";
-        retVal = true;
-        batteryStatus = true;
-    }
+    statusMsg+= req + " value in range!";
+    batteryStatus = true;
 
-    return retVal;
+    return true;
 }
 
 void BMSCheck::checkBatteryParam(float temperature, float soc, float chargeRate)
