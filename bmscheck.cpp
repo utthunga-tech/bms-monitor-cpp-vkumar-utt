@@ -22,15 +22,15 @@ bool BMSCheck::isValueInrange(string req, float value, float min, float max)
     bool retVal = false;
 
     if(value < min){
-        statusMsg+= req + " value less than range!\n";
+        statusMsg+= req + " value less than range!";
         retVal = false;
         batteryStatus = false;
     }else if(value > max){
-        statusMsg+= req +  " value more than range!\n";
+        statusMsg+= req +  " value more than range!";
         retVal = false;
         batteryStatus = false;
     }else{
-        statusMsg+= req + " value in range!\n";
+        statusMsg+= req + " value in range!";
         retVal = true;
         batteryStatus = true;
     }
@@ -43,12 +43,12 @@ bool BMSCheck::isValueInrange(string req, float value, float max)
     bool retVal = true;
 
     if(value > max) {
-        statusMsg+= req + " value more than range!\n";
+        statusMsg+= req + " value more than range!";
         retVal = false;
         batteryStatus = false;
       }
     else{
-        statusMsg+= req + " value in range!\n";
+        statusMsg+= req + " value in range!";
         retVal = true;
         batteryStatus = true;
     }
