@@ -26,7 +26,7 @@ bool BMSCheck::isValueInrange(string req, float value, float min, float max)
         retVal = false;
         batteryStatus = false;
     }else if(value > max){
-        statusMsg+= req +  " value less than range!\n";
+        statusMsg+= req +  " value more than range!\n";
         retVal = false;
         batteryStatus = false;
     }else{
@@ -58,20 +58,8 @@ bool BMSCheck::isValueInrange(string req, float value, float max)
 
 void BMSCheck::checkBatteryParam(float temperature, float soc, float chargeRate)
 {
-    /*statusMsg = "";
-    bool tempcheck = isValueInrange(TEMP_FUNC, temperature, tempMin, tempMax);
-    bool soccheck = isValueInrange(SOC_FUNC, soc, socMin, socMax);
-    bool ratecheck = isValueInrange(RATE_FUNC, chargeRate, rateMax);
-
-    if(tempcheck == true && soccheck == true && ratecheck == true){
-        statusMsg += "*Battery is OK*\n";
-        batteryStatus = true;
-        return;
-    }
-    
-        statusMsg += "-Battery NOT OK-\n";
-        batteryStatus = false;*/
-    
+    statusMsg = "";
+        
     if(isValueInrange(TEMP_FUNC, temperature, tempMin, tempMax))
     {
         if(isValueInrange(SOC_FUNC, soc, socMin, socMax))
