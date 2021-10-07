@@ -61,11 +61,12 @@ void BMSCheck::checkBatteryParam(float temperature, float soc, float chargeRate)
     if(tempcheck == true && soccheck == true && ratecheck == true){
         statusMsg += "*Battery is OK*\n";
         batteryStatus = true;
+        return;
     }
-    else{
+    
         statusMsg += "-Battery NOT OK-\n";
         batteryStatus = false;
-    }
+    
 }
 
 bool BMSCheck::isbatteryOk()
