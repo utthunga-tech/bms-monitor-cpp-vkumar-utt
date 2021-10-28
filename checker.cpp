@@ -11,14 +11,54 @@
 #define RATE_MAX 0.8
 
 using namespace std;
-enum LANG{
+
+enum LANG
+{
     ENGLISH = 0,
     GERMAN
 };
 
-int selected_lan = ENGLISH; //GERMAN; //;
+enum UNIT
+{
+    CELSIUS = 0,
+    FAHRENHEIT,
+    KELVIN
+};
+
+const int selected_lan = ENGLISH; //GERMAN; //;
+const int selected_unit = CELSIUS;
 
 using namespace std;
+
+string getTempUnit()
+{
+    if(selected_unit == CELSIUS)
+        return "CELSIUS";
+    else if(selected_unit == FAHRENHEIT)
+        return "FAHRENHEIT";
+
+    return "KELVIN";
+}
+
+double getTempMax()
+{
+    if(selected_unit == CELSIUS)
+        return 45;
+    else if(selected_unit == FAHRENHEIT)
+        return 113;
+
+    return 318.15;
+}
+
+double getTempMin()
+{
+    if(selected_unit == CELSIUS)
+        return 0;
+    else if(selected_unit == FAHRENHEIT)
+        return 32;
+
+    return 273.15;
+}
 
 string tempmsgabove()
 {
@@ -137,7 +177,9 @@ int ratevalisOk(double val, double max)
 
 int tempOk(double temp)
 {
-    int ret = valisOk(temp, TEMP_MAX, TEMP_MIN);
+    //int ret = valisOk(temp, TEMP_MAX, TEMP_MIN);
+
+    int ret = valisOk(temp, getTempMax(), getTempMin());
     if(ret == 1)
     {
         showMsg(tempmsginrange());
@@ -197,8 +239,10 @@ bool batteryIsOk(double temp, double soc, double rate)
 
 int main()
 {
+    cout<<"Current Temperature Unit : "<<getTempUnit()<<"\n";
+
     //1. battery<0 , soc true, rate true
-    cout<<"Test 1. battery<0 , soc true, rate true,\n";
+    cout<<"\nTest 1. battery<0 , soc true, rate true,\n";
     assert(batteryIsOk(-1, 70, 0.7)==false);
 
     //2. battery>45, soc true, rate true
