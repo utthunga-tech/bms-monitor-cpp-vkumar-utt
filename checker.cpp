@@ -4,7 +4,7 @@
 #include <map>
 using namespace std;
 
-//Multilanguage support & Warning support
+//Multilanguage support , Warning support & Temp unit
 
 struct DataBoundary{
 
@@ -53,6 +53,8 @@ static string RATE_NORMAL = "RATE_NORMAL";
 static string HIGH_RATE_WARNING = "HIGH_RATE_WARNING";
 static string HIGH_RATE_BREACH = "HIGH_RATE_BREACH";
 
+
+static string UNIT = "Celsius";
 
 void loadEnglishMessages()
 {
@@ -138,26 +140,37 @@ void createSOCDataset()
 }
 
 //temp data
-void createTEMPDataset()
+double getTempvalue(int unit, double celsius)
 {
-    dataBTEMPLowBreach.low = -10;
-    dataBTEMPLowBreach.upper = 0;
+    if(unit == 2)
+    {
+        double fahrenheit = (celsius * 9.0) / 5.0 + 32;
+        UNIT = "Fahrenheit";
+        return fahrenheit;
+    }
+    return celsius;
+}
+
+void createTEMPDataset(int unit)
+{
+    dataBTEMPLowBreach.low = getTempvalue(unit, -10);
+    dataBTEMPLowBreach.upper = getTempvalue(unit, 0);
     dataBTEMPLowBreach.message = LOW_TEMP_BREACH;
 
-    dataBTEMPLowWarn.low = 1;
-    dataBTEMPLowWarn.upper = 2.25;
+    dataBTEMPLowWarn.low = getTempvalue(unit, 1);
+    dataBTEMPLowWarn.upper = getTempvalue(unit, 2.25);
     dataBTEMPLowWarn.message = LOW_TEMP_WARNING;
 
-    dataBTEMPNormal.low = 2.26;
-    dataBTEMPNormal.upper = 42.25;
+    dataBTEMPNormal.low = getTempvalue(unit, 2.26);
+    dataBTEMPNormal.upper = getTempvalue(unit, 42.25);
     dataBTEMPNormal.message = TEMP_NORMAL;
 
-    dataBTEMPHighWarn.low = 42.26;
-    dataBTEMPHighWarn.upper = 45;
+    dataBTEMPHighWarn.low = getTempvalue(unit, 42.26);
+    dataBTEMPHighWarn.upper = getTempvalue(unit, 45);
     dataBTEMPHighWarn.message = HIGH_TEMP_WARNING;
 
-    dataBTEMPHighBreach.low = 46;
-    dataBTEMPHighBreach.upper = 100;
+    dataBTEMPHighBreach.low = getTempvalue(unit, 46);
+    dataBTEMPHighBreach.upper = getTempvalue(unit, 100);
     dataBTEMPHighBreach.message = HIGH_TEMP_BREACH;
 }
 
@@ -342,6 +355,7 @@ bool rateCheck(double val)
 
 bool batteryCheck(double temp, double soc, double rate)
 {
+    cout<<"Temp : "<<temp<<" "<<UNIT<<" - SOC : "<<soc<<" - Rate : "<<rate<<"\n";
 
     bool t = tempSOCCheck(temp, soc);
     bool r = rateCheck(rate);
@@ -349,28 +363,33 @@ bool batteryCheck(double temp, double soc, double rate)
         printMessage(BATTERY_OK);
         return true;
     }
+
     printMessage(BATTERY_NOTOK);
+    cout<<"===========================\n";
     return false;
 }
 
 int main()
 {
-    int lang;
+    int lang, unit;
     cout<<"Select the language (1 - English, 2 - German) : ";
     cin>>lang;
+
+    cout<<"Select the Temperature Unit (1 - Celsius, 2 - Fahrenheit) : ";
+    cin>>unit;
 
     loadMessage(lang);
 
     createSOCDataset();
-    createTEMPDataset();
+    createTEMPDataset(unit);
     createRATEDataset();
 
-    assert(batteryCheck(-10, 0, 0)==false);
-    assert(batteryCheck(0, 0, 0)==false);
-    assert(batteryCheck(21, 0, 0)==false);
-    assert(batteryCheck(25, 0, 0)==false);
-    assert(batteryCheck(76, 0, 0)==false);
-    assert(batteryCheck(81, 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,-10), 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,0), 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,21), 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,25), 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,76), 0, 0)==false);
+    assert(batteryCheck(getTempvalue(unit,81), 0, 0)==false);
 
     return 0;
 }
