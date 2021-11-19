@@ -366,11 +366,11 @@ int main()
     createRATEDataset();
 
     assert(batteryCheck(-10, 0, 0)==false);
-    batteryCheck(0, 0, 0);
-    batteryCheck(21, 0, 0);
-    batteryCheck(25, 0, 0);
-    batteryCheck(76, 0, 0);
-    batteryCheck(81, 0, 0);
+    assert(batteryCheck(0, 0, 0)==false);
+    assert(batteryCheck(21, 0, 0)==false);
+    assert(batteryCheck(25, 0, 0)==false);
+    assert(batteryCheck(76, 0, 0)==false);
+    assert(batteryCheck(81, 0, 0)==false);
 
     return 0;
 }
